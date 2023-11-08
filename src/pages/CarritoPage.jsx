@@ -3,11 +3,19 @@ import { CarritoContext } from '../context/CarritoContext'
 
 export const CarritoPage = () => {
 
-    const { listaCompras, agregarCompra, eliminarCompra, aumentarCantidad, disminuirCantidad } = useContext(CarritoContext)
+    const { listaCompras, eliminarCompra, aumentarCantidad, disminuirCantidad } = useContext(CarritoContext)
 
     const handleDelete = (id) => {
         eliminarCompra(id);
     };
+
+    const calcularTotal = () => {
+        return listaCompras.compras.reduce((total, compra) => total + compra.price * compra.cantidad, 0).toFixed(2)
+    };
+
+    const handlePrint = () => {
+        print()
+    }
 
     return (
         <>
@@ -26,7 +34,11 @@ export const CarritoPage = () => {
                             <tr key={compra.id}>
                                 <td>{compra.title}</td>
                                 <td>{compra.price}</td>
-                                <td>1</td> {/* Asumiendo que tienes la cantidad en cada compra */}
+                                <td>
+                                    <button className='btn btn-outline-primary' onClick={() => disminuirCantidad(compra.id)}>-</button>
+                                    <button className='btn btn-primary'>{compra.cantidad}</button>
+                                    <button className='btn btn-outline-primary' onClick={() => aumentarCantidad(compra.id)}>+</button>
+                                </td>
                                 <td>
                                     <button
                                         type="button"
@@ -43,10 +55,20 @@ export const CarritoPage = () => {
                             <td colSpan="4">No hay productos en el carrito.</td>
                         </tr>
                     )}
+
+                    <th><b>Total a pagar: </b></th>
+                    <td></td>
+                    <td></td>
+                    <td>${calcularTotal()}</td>
+
                 </tbody>
             </table>
             <div className="d-grid gap-2">
-                <button className="btn btn-primary">Comprar</button>
+                <button
+                    className="btn btn-primary"
+                    onClick={handlePrint}
+                    disabled={listaCompras.compras < 1}
+                >Comprar</button>
             </div>
         </>
     );

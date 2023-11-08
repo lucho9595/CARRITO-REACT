@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { NavLink } from 'react-router-dom';
+import { CarritoContext } from '../context/CarritoContext';
 
 export const Navbar = () => {
+
+    const { listaCompras } = useContext(CarritoContext);
+
+    const sumar = () => {
+        const result = listaCompras.compras
+        let total = 0;
+        for (let i = 0; i < result.length; i++) {
+            total += result[i].cantidad;
+        }
+        return total;
+
+    }
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -18,7 +32,7 @@ export const Navbar = () => {
                         </li>
                     </ul>
                     <NavLink to='/carrito'>
-                        <Badge badgeContent={4} color="secondary">
+                        <Badge badgeContent={sumar()} color="secondary">
                             <ShoppingCartIcon />
                         </Badge>
                     </NavLink>

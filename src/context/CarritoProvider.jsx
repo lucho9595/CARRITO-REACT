@@ -18,24 +18,20 @@ const comprasReducer = (state = initialState, action = {}) => {
                 ...state,
                 compras: [...state.compras, action.payload],
             };
-        // case ADD_COUNT:
-        //     // Implementa la lógica para aumentar la cantidad de un producto
-        //     return {
-        //         ...state,
-        //         // Actualiza la cantidad del producto en la lista de compras
-        //         compras: state.compras.map(item =>
-        //             item.id === action.payload ? { ...item, cantidad: item.cantidad + 1 } : item
-        //         ),
-        //     };
-        // case REST_COUNT:
-        //     // Implementa la lógica para disminuir la cantidad de un producto
-        //     return {
-        //         ...state,
-        //         // Actualiza la cantidad del producto en la lista de compras
-        //         compras: state.compras.map(item =>
-        //             item.id === action.payload ? { ...item, cantidad: item.cantidad - 1 } : item
-        //         ),
-        //     };
+        case ADD_COUNT:
+            return {
+                ...state,
+                compras: state.compras.map(item =>
+                    item.id === action.payload ? { ...item, cantidad: item.cantidad + 1 } : item
+                ),
+            };
+        case REST_COUNT:
+            return {
+                ...state,
+                compras: state.compras.map(item =>
+                    item.id === action.payload && item.cantidad > 1 ? { ...item, cantidad: item.cantidad - 1 } : item
+                ),
+            };
         case DELETE_COMPRA:
             return {
                 ...state,
@@ -49,8 +45,9 @@ const comprasReducer = (state = initialState, action = {}) => {
 export const CarritoProvider = ({ children }) => {
 
     const [listaCompras, dispatch] = useReducer(comprasReducer, initialState);
-    console.log(listaCompras)
+
     const agregarCompra = (compra) => {
+        compra.cantidad = 1
         const action = {
             type: ADD_COMPRA,
             payload: compra
